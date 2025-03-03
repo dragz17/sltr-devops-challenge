@@ -1,0 +1,7 @@
+version: "3.8"
+
+services:
+  welcome-app:
+    image: testing/welcome
+    ports:
+      - "8000:5000"

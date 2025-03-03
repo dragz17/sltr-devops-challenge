@@ -1,0 +1,40 @@
+name: Docker CI/CD
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag (e.g., v1.0.0)"
+        required: true
+        default: "v1.0.0"
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    env:
+      IMAGE_NAME: dragz17/sltr-devops-boy
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      - name: Build Docker image
+        run: |
+          TAG_VERSION=${{ github.event.inputs.tag }}
+          docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:$TAG_VERSION .
+
+      - name: Push Docker images
+        run: |
+          TAG_VERSION=${{ github.event.inputs.tag }}
+          docker push $IMAGE_NAME:latest
+          docker push $IMAGE_NAME:$TAG_VERSION
