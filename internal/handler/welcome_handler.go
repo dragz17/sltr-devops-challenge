@@ -18,7 +18,12 @@ func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 
 	message := service.GetWelcomeMessage(name)
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(message))
+
+	// Check for error when writing the response
+	if _, err := w.Write([]byte(message)); err != nil {
+		http.Error(w, "Failed to write response", http.StatusInternalServerError)
+		return
+	}
 }
 
 // NotFoundHandler menangani invalid path
