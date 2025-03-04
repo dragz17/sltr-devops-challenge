@@ -6,14 +6,27 @@ This project is designed to deploy a simple web application in a cloud environme
 ![Architecture](internal/storage/architecture.png)
 
 ## Architecture Components
-- **GCP VPC**: Network segmentation for isolating resources.
-- **GKE (Google Kubernetes Engine)**: Manages the deployment of containers.
-- **Cloud Load Balancer**: Distributes traffic across multiple instances.
-- **Cloud Armor**: Provides Web Application Firewall (WAF) functionality.
-- **Cloud Storage**: Stores static assets and backups.
-- **Cloud SQL**: Managed relational database service.
-- **Secret Manager**: Stores and manages sensitive information securely.
-- **Cloud Monitoring & Logging**: Ensures observability and monitoring for system health.
+
+### Networking & Security
+- **VPC (Virtual Private Cloud)** – Provides network segmentation and isolates different workloads.
+- **Cloud Load Balancer (LB)** – Distributes incoming traffic to backend services running in GKE.
+- **Cloud Armor** – Implements Web Application Firewall (WAF) to protect against DDoS and other attacks.
+- **Cloud DNS** – Manages domain resolution for applications.
+- **Cloud CDN** – Caches content closer to users to reduce latency and improve performance.
+
+### Compute & Scaling
+- **Google Kubernetes Engine (GKE)** – Manages containerized workloads with automatic scaling.
+- **Node Autoscaler** – Ensures that worker nodes automatically scale based on resource demands.
+- **GKE Workers (worker-a & worker-b)** – Runs containerized applications across different availability zones for high availability.
+
+### Data & Storage
+- **Memory Store** – Provides in-memory caching for fast data retrieval. *(if needed in the future)*
+- **Cloud SQL** – Fully managed relational database service for application data storage. *(if needed in the future)*
+
+### Observability & Security
+- **Cloud Monitoring & Logging** – Ensures system health observability with real-time metrics and logs.
+- **Secret Manager** – Securely stores and manages sensitive credentials such as API keys, database passwords, and certificates. *(if needed in the future)*
+- **Container Registry** – Stores and manages container images before deployment to GKE.
 
 ---
 
@@ -39,9 +52,6 @@ This project is designed to deploy a simple web application in a cloud environme
 
 # Evidence
 
-## Deployment Logs
-*(Attach screenshots or logs from the CI/CD execution and successful deployment verification)*
-
 ## Application Access
 ![Evidence-1](internal/storage/evidence1.png)
 - URL: `http(s)://<IP>/welcome/{name}`
@@ -49,7 +59,8 @@ This project is designed to deploy a simple web application in a cloud environme
   - `/welcome/{name}`: Returns `"Selamat datang {name}"` if name is provided; otherwise, returns `"Anonymous"`.
 
 ## Containerization
-- Docker Run: `docker build -t testing/welcome .`
+- Docker Build: `docker build -t testing/welcome .`
+- Docker Run: `docker run -d -p 5000:5000 --name welcome-container testing/welcome`
 - Docker Compose: `docker-compose up -d`
 
 ## Container Registry
