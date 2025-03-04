@@ -52,10 +52,10 @@ jobs:
           CONTAINER_NAME: welcome-app
           
         run: |
-          echo "$PRIVATE_KEY" | tr -d '\r' > private_key.pem
-          chmod 600 private_key.pem
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
           ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
-          
+
           ssh -i private_key.pem $USER@$HOST << "EOF"
             docker pull $IMAGE_NAME:latest
             
