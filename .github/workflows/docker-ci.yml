@@ -52,9 +52,9 @@ jobs:
           CONTAINER_NAME: welcome-app
           
         run: |
-          echo "$PRIVATE_KEY" > private_key.pem
+          echo "$PRIVATE_KEY" | tr -d '\r' > private_key.pem
           chmod 600 private_key.pem
-          ssh -i private_key.pem $USER@$HOST << 'EOF'
+          ssh -i private_key.pem $USER@$HOST << "EOF"
             docker pull $IMAGE_NAME:latest
             
             if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
